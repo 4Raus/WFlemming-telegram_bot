@@ -3,6 +3,12 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
+
+//TODO:
+//1. Start like a button.
+//2. No keyboard.
+//3. Logic
 
 class Program
 {
@@ -16,7 +22,8 @@ class Program
         {
             AllowedUpdates = new[]
             {
-                UpdateType.Message,
+                UpdateType.Message, //just messages from keyboard
+                UpdateType.CallbackQuery //Inline buttons
             },
             ThrowPendingUpdates = true,
         };
@@ -25,7 +32,7 @@ class Program
 
         var me = await _botClient.GetMeAsync();
 
-        Console.WriteLine($"{me.FirstName} запущен!");
+        Console.WriteLine($"{me.FirstName} launched!");
 
         await Task.Delay(-1);
     }
@@ -37,21 +44,80 @@ class Program
             switch (update.Type)
             {
                 case UpdateType.Message:
+                {
+                    var message = update.Message;
+                    var user = message.From;
+
+                    Console.WriteLine($"{user.FirstName} ({user.Id}) wrote messaage: {message.Text}");
+
+                    var chat = message.Chat;
+
+                    switch (message.Type)
                     {
-                        var message = update.Message;
-                        var user = message.From;
-
-                        Console.WriteLine($"{user.FirstName} ({user.Id}) написал сообщение: {message.Text}");
-
-                        var chat = message.Chat;
-                        await botClient.SendTextMessageAsync(
-                            chat.Id,
-                            message.Text,
-                            replyToMessageId: message.MessageId
-                            );
-                        //Console.WriteLine("Пришло сообщение!");
-                        return;
+                        case MessageType.Text:
+                        {
+                            if (message.Text == "/start")
+                            {
+                                await botClient.SendTextMessageAsync(
+                                    chat.Id,
+                                    "Choose the type of keyboard to communicate with me.\n" +
+                                    "/inline  -> it means that the buttons will be located above the input line.\n");
+                                    //"/reply  -> it means that the buttons will be located below the input line. \n"
+                                return;
+                            }
+                            if (message.Text == "/inline")
+                            {
+                                var inlineKeyboard = new InlineKeyboardMarkup(
+                                    new List<InlineKeyboardButton[]>()
+                                    {
+                                        new InlineKeyboardButton[]
+                                        {
+                                            InlineKeyboardButton.WithCallbackData("Chemistry calculator", "buttonChemistry"),
+                                            InlineKeyboardButton.WithCallbackData("Genetic calculator", "buttonGenetic"),
+                                        },
+                                        new InlineKeyboardButton[]
+                                        {
+                                            InlineKeyboardButton.WithCallbackData("About Me", "buttonMeInfo"),
+                                            InlineKeyboardButton.WithCallbackData("Some good materials for you", "buttonMaterials"),
+                                        },
+                                    });
+                                await botClient.SendTextMessageAsync(
+                                    chat.Id,
+                                    "That's inline K.",
+                                    replyMarkup: inlineKeyboard);
+                                return;
+                            }
+                            //if (message.Text == "/reply")
+                            //{
+                            //    var replyKeyboard = new ReplyKeyboardMarkup(
+                            //        new List<KeyboardButton[]>()
+                            //        {
+                            //            new KeyboardButton[]
+                            //            {
+                            //                new KeyboardButton(""),
+                            //            }
+                            //        })
+                            //    {
+                            //        ResizeKeyboard = true
+                            //    };
+                            //    await botClient.SendTextMessageAsync(
+                            //        chat.Id,
+                            //        "That's reply K.",
+                            //        replyMarkup: replyKeyboard);
+                            //    return;
+                            //}
+                            return;
+                        }
+                        default:
+                        {
+                            await botClient.SendTextMessageAsync(
+                                chat.Id,
+                                "Use only text!");
+                            return;
+                        }
                     }
+                    return;
+                }
             }
         }
         catch (Exception ex) { Console.WriteLine(ex.ToString()); }
