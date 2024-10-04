@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Functions\Genetik\complimentarity\" />
-    <Folder Include="Functions\Genetik\blood\" />
     <Folder Include="Functions\Genetik\polinom\" />
     <Folder Include="Functions\Genetik\chromosome\" />
   </ItemGroup>
