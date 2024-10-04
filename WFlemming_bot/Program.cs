@@ -27,7 +27,7 @@ class Program
 
 
 
-//
+// First try
 //using System.Text.Json.Serialization;
 //using Telegram.Bot;
 //using Telegram.Bot.Exceptions;
@@ -37,11 +37,6 @@ class Program
 //using Telegram.Bot.Types.ReplyMarkups;
 //using System.IO;
 //using System.Threading;
-
-////TODO:
-////1. Start like a button.
-////2. No keyboard.
-////3. Logic
 
 //class Program
 //{

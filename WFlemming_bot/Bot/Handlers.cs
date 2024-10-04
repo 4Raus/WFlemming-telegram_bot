@@ -62,11 +62,14 @@ public static class Handlers
         var chatId = callbackQuery.Message.Chat.Id;
         var callbackData = callbackQuery.Data;
 
+        Console.WriteLine($"Received callback data: {callbackData}");
+
         if (callbackQuery.Message != null)
         {
             await botClient.DeleteMessageAsync(chatId, callbackQuery.Message.MessageId);
         }
 
+        var language = UserState.GetUserLanguage(chatId);
         InlineKeyboardMarkup keyboard;
 
         switch (callbackData)
@@ -97,43 +100,103 @@ public static class Handlers
                 );
                 return;
 
+            case "buttonChemistry":
+                var responseMessageChemistry = GetLocalizedMessage("Вы выбрали химический калькулятор.",
+                                                                  "You have selected the chemistry calculator.",
+                                                                  "Sie haben den Chemie-Rechner ausgewählt.",
+                                                                  language);
+                keyboard = GetKeyboardForLanguage(language);
+                await botClient.SendTextMessageAsync(chatId, responseMessageChemistry, replyMarkup: keyboard);
+                break;
+
+            case "buttonGenetic":
+                keyboard = InlineKeyboards.GeneticCalculatorMenu(language);
+                var responseMessageGenetic = GetLocalizedMessage(
+                    "Выберите раздел генетического калькулятора:",
+                    "Select a section of the genetic calculator:",
+                    "Wählen Sie einen Abschnitt des genetischen Rechners:",
+                    language);
+                await botClient.SendTextMessageAsync(chatId, responseMessageGenetic, replyMarkup: keyboard);
+                break;
+
+            case "buttonMeInfo":
+                var aboutMessage = GetLocalizedMessage(Messages.AboutBotRu, Messages.AboutBotEn, Messages.AboutBotDe, language);
+                keyboard = GetKeyboardForLanguage(language);
+                await botClient.SendTextMessageAsync(chatId, aboutMessage, replyMarkup: keyboard);
+                break;
+
+            case "buttonMaterials":
+                var materialsMessage = GetLocalizedMessage(Messages.UsefulMaterialsRu, Messages.UsefulMaterialsEn, Messages.UsefulMaterialsDe, language);
+                keyboard = GetKeyboardForLanguage(language);
+                await botClient.SendTextMessageAsync(chatId, materialsMessage, replyMarkup: keyboard);
+                break;
+
+            // GEN
+            case "gen_blood":
+                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
+                    "Вы выбрали Кровь. Начинаем расчет...",
+                    "You selected Blood. Starting calculation...",
+                    "Sie haben Blut gewählt. Berechnung beginnt...",
+                    language));
+                GeneticCalculator.BloodFunctions.HandleBlood(botClient, chatId);
+                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                break;
+
+            case "gen_polymorphism":
+                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
+                    "Вы выбрали Полиморфизм. Начинаем расчет...",
+                    "You selected Polymorphism. Starting calculation...",
+                    "Sie haben Polymorphismus gewählt. Berechnung beginnt...",
+                    language));
+                GeneticCalculator.PolymorphismFunctions.HandlePolymorphism(botClient, chatId);
+                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                break;
+
+            case "gen_complementarity":
+                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
+                    "Вы выбрали Комплиментарность. Начинаем расчет...",
+                    "You selected Complementarity. Starting calculation...",
+                    "Sie haben Komplementarität gewählt. Berechnung beginnt...",
+                    language));
+                GeneticCalculator.ComplementarityFunctions.HandleComplementarity(botClient, chatId);
+                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                break;
+
+            case "gen_chromosomes":
+                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
+                    "Вы выбрали Хромосомы. Начинаем расчет...",
+                    "You selected Chromosomes. Starting calculation...",
+                    "Sie haben Chromosomen gewählt. Berechnung beginnt...",
+                    language));
+                GeneticCalculator.ChromosomesFunctions.HandleChromosomes(botClient, chatId);
+                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                break;
+
+            case "gen_back":
+                keyboard = GetKeyboardForLanguage(language);
+                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
+                    "Возврат в главное меню.",
+                    "Returning to the main menu.",
+                    "Zurück zum Hauptmenü.",
+                    language), replyMarkup: keyboard);
+                break;
+
             default:
-                string responseMessage;
-                keyboard = GetKeyboardForLanguage(UserState.GetUserLanguage(chatId));
-                switch (callbackData)
-                {
-                    case "buttonChemistry":
-                        responseMessage = GetLocalizedMessage("Вы выбрали химический калькулятор.",
-                                                              "You have selected the chemistry calculator.",
-                                                              "Sie haben den Chemie-Rechner ausgewählt.",
-                                                              UserState.GetUserLanguage(chatId));
-                        await botClient.SendTextMessageAsync(chatId, responseMessage, replyMarkup: keyboard);
-                        break;
-
-                    case "buttonGenetic":
-                        responseMessage = GetLocalizedMessage("Вы выбрали генетический калькулятор.",
-                                                              "You have selected the genetic calculator.",
-                                                              "Sie haben den genetischen Rechner ausgewählt.",
-                                                              UserState.GetUserLanguage(chatId));
-                        await botClient.SendTextMessageAsync(chatId, responseMessage, replyMarkup: keyboard);
-                        break;
-
-                    case "buttonMeInfo":
-                        responseMessage = GetLocalizedMessage(Messages.AboutBotRu, Messages.AboutBotEn, Messages.AboutBotDe, UserState.GetUserLanguage(chatId));
-                        await botClient.SendTextMessageAsync(chatId, responseMessage, replyMarkup: keyboard);
-                        break;
-
-                    case "buttonMaterials":
-                        responseMessage = GetLocalizedMessage(Messages.UsefulMaterialsRu, Messages.UsefulMaterialsEn, Messages.UsefulMaterialsDe, UserState.GetUserLanguage(chatId));
-                        await botClient.SendTextMessageAsync(chatId, responseMessage, replyMarkup: keyboard);
-                        break;
-
-                    default:
-                        await botClient.SendTextMessageAsync(chatId, "Unknown option selected.", replyMarkup: keyboard);
-                        break;
-                }
+                keyboard = GetKeyboardForLanguage(language);
+                await botClient.SendTextMessageAsync(chatId, "Unknown option selected.", replyMarkup: keyboard);
                 break;
         }
+    }
+
+    private static async Task SendGeneticCalculatorMenu(ITelegramBotClient botClient, long chatId, string language)
+    {
+        var geneticCalculatorMessage = GetLocalizedMessage(
+            "Выберите раздел генетического калькулятора:",
+            "Select a section of the genetic calculator:",
+            "Wählen Sie einen Abschnitt des genetischen Rechners:",
+            language);
+        var keyboard = InlineKeyboards.GeneticCalculatorMenu(language);
+        await botClient.SendTextMessageAsync(chatId, geneticCalculatorMessage, replyMarkup: keyboard);
     }
 
     private static string GetLocalizedMessage(string ru, string en, string de, string language)
