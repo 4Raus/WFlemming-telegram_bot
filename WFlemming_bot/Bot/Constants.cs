@@ -124,4 +124,66 @@ public static class InlineKeyboards
             }
         }),
     };
+
+    // GEN -> Blood Calc
+    public static InlineKeyboardMarkup BloodCalculatorMenu(string language) => language switch
+    {
+        "ru" => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Первая группа", "blood_first_type"),
+                InlineKeyboardButton.WithCallbackData("Вторая группа (тип 1)", "blood_second_type_1"),
+                InlineKeyboardButton.WithCallbackData("Вторая группа (тип 2)", "blood_second_type_2"),
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Третья группа (тип 1)", "blood_third_type_1"),
+                InlineKeyboardButton.WithCallbackData("Третья группа (тип 2)", "blood_third_type_2"),
+                InlineKeyboardButton.WithCallbackData("Четвертая группа", "blood_fourth_type")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Назад", "blood_back")
+            }
+        }),
+        "de" => new InlineKeyboardMarkup(new[]
+{
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Erste Gruppe", "blood_first_type"),
+                InlineKeyboardButton.WithCallbackData("Zweite Gruppe (Typ 1)", "blood_second_type_1"),
+                InlineKeyboardButton.WithCallbackData("Zweite Gruppe (Typ 2)", "blood_second_type_2"),
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Dritte Gruppe (Typ 1)", "blood_third_type_1"),
+                InlineKeyboardButton.WithCallbackData("Dritte Gruppe (Typ 2)", "blood_third_type_2"),
+                InlineKeyboardButton.WithCallbackData("Vierte Gruppe", "blood_fourth_type")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Zurück", "blood_back")
+            }
+        }),
+        _ => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("First type", "blood_first_type"),
+                InlineKeyboardButton.WithCallbackData("Second type (type 1)", "blood_second_type_1"),
+                InlineKeyboardButton.WithCallbackData("Second type (type 2)", "blood_second_type_2"),
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Third type (type 1)", "blood_third_type_1"),
+                InlineKeyboardButton.WithCallbackData("Third type (type 2)", "blood_third_type_2"),
+                InlineKeyboardButton.WithCallbackData("Fourth type", "blood_fourth_type")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Back", "blood_back")
+            }
+        }),
+    };
 }

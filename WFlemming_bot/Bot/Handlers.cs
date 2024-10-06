@@ -3,6 +3,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using System.Threading.Tasks;
+using GeneticCalculator;
 
 public static class Handlers
 {
@@ -21,6 +22,12 @@ public static class Handlers
     private static async Task HandleMessageAsync(ITelegramBotClient botClient, Message message)
     {
         var chatId = message.Chat.Id;
+        var userName = message.From?.Username ?? $"{message.From?.FirstName} {message.From?.LastName}";
+        var userId = message.From?.Id;
+
+        //Logs messages
+        Console.WriteLine($"User: {userName} (ID: {userId}) sent message: \"{message.Text}\"");
+
         switch (message.Text)
         {
             case "/start":
@@ -28,11 +35,14 @@ public static class Handlers
                 await botClient.SendTextMessageAsync(
                     chatId: chatId,
                     text: Messages.WelcomeMessageEnglish,
-                    replyMarkup: InlineKeyboards.LanguageSelection
+                    replyMarkup: InlineKeyboards.LanguageSelection,
+                    parseMode: ParseMode.Html
                 );
                 break;
 
             case "/clear":
+                //Logs messages
+                Console.WriteLine($"User: {userName} (ID: {userId}) requested to clear chat.");
                 for (int i = 0; i < 50; i++)
                 {
                     try
@@ -52,6 +62,8 @@ public static class Handlers
                     _ => Messages.UnknownCommandEn
                 };
 
+                //Logs messages
+                Console.WriteLine($"User: {userName} (ID: {userId}) sent an unrecognized command.");
                 await botClient.SendTextMessageAsync(chatId, replyMessage);
                 break;
         }
@@ -61,8 +73,11 @@ public static class Handlers
     {
         var chatId = callbackQuery.Message.Chat.Id;
         var callbackData = callbackQuery.Data;
+        var userName = callbackQuery.From?.Username ?? $"{callbackQuery.From?.FirstName} {callbackQuery.From?.LastName}";
+        var userId = callbackQuery.From?.Id;
 
-        Console.WriteLine($"Received callback data: {callbackData}");
+        //Logs messages
+        Console.WriteLine($"User: {userName} (ID: {userId}) selected option: \"{callbackData}\"");
 
         if (callbackQuery.Message != null)
         {
@@ -74,6 +89,7 @@ public static class Handlers
 
         switch (callbackData)
         {
+            // LANGUAGE
             case "lang_ru":
                 UserState.SetUserLanguage(chatId, "ru");
                 keyboard = InlineKeyboards.MainMenuRu;
@@ -100,6 +116,7 @@ public static class Handlers
                 );
                 return;
 
+            // GENERAL MENU
             case "buttonChemistry":
                 var responseMessageChemistry = GetLocalizedMessage("Вы выбрали химический калькулятор.",
                                                                   "You have selected the chemistry calculator.",
@@ -132,16 +149,54 @@ public static class Handlers
                 break;
 
             // GEN
+            // GEN -> BLOOD
             case "gen_blood":
-                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
-                    "Вы выбрали Кровь. Начинаем расчет...",
-                    "You selected Blood. Starting calculation...",
-                    "Sie haben Blut gewählt. Berechnung beginnt...",
-                    language));
-                GeneticCalculator.BloodFunctions.HandleBlood(botClient, chatId);
-                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                // Instraction (how to use)
+                var instruction = GetLocalizedMessage(
+                    "Выберите генотип крови для расчета. Вы можете выбрать первую, вторую, третью или четвертую группу крови.",
+                    "Select the blood genotype for calculation. You can choose the first, second, third, or fourth blood type.",
+                    "Wählen Sie den Blutgenotyp zur Berechnung aus. Sie können den ersten, zweiten, dritten oder vierten Bluttyp wählen.",
+                    language);
+
+                keyboard = InlineKeyboards.BloodCalculatorMenu(language);
+                await botClient.SendTextMessageAsync(chatId, instruction, replyMarkup: keyboard);
                 break;
 
+            case "blood_first_type":
+                BloodFunctions.HandleBlood(botClient, chatId, "first_type", "first_type", language);
+                break;
+
+            case "blood_second_type_1":
+                BloodFunctions.HandleBlood(botClient, chatId, "second_type_1", "second_type_1", language);
+                break;
+
+            case "blood_second_type_2":
+                BloodFunctions.HandleBlood(botClient, chatId, "second_type_2", "second_type_2", language);
+                break;
+
+            case "blood_third_type_1":
+                BloodFunctions.HandleBlood(botClient, chatId, "third_type_1", "third_type_1", language);
+                break;
+
+            case "blood_third_type_2":
+                BloodFunctions.HandleBlood(botClient, chatId, "third_type_2", "third_type_2", language);
+                break;
+
+            case "blood_fourth_type":
+                BloodFunctions.HandleBlood(botClient, chatId, "fourth_type", "fourth_type", language);
+                break;
+
+            case "blood_back":
+                keyboard = InlineKeyboards.GeneticCalculatorMenu(language);
+                var backMessage = GetLocalizedMessage(
+                    "Выберите раздел генетического калькулятора:",
+                    "Select a section of the genetic calculator:",
+                    "Wählen Sie einen Abschnitt des genetischen Rechners:",
+                    language);
+                await botClient.SendTextMessageAsync(chatId, backMessage, replyMarkup: keyboard);
+                break;
+            
+            //GEN -> POLYM
             case "gen_polymorphism":
                 await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
                     "Вы выбрали Полиморфизм. Начинаем расчет...",
@@ -152,6 +207,7 @@ public static class Handlers
                 await SendGeneticCalculatorMenu(botClient, chatId, language);
                 break;
 
+            //GEN -> COMPL
             case "gen_complementarity":
                 await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
                     "Вы выбрали Комплиментарность. Начинаем расчет...",
@@ -162,6 +218,7 @@ public static class Handlers
                 await SendGeneticCalculatorMenu(botClient, chatId, language);
                 break;
 
+            //GEN -> CHROMO
             case "gen_chromosomes":
                 await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
                     "Вы выбрали Хромосомы. Начинаем расчет...",
