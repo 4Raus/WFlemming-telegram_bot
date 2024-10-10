@@ -186,4 +186,63 @@ public static class InlineKeyboards
             }
         }),
     };
+
+    // GEN -> Chromos Calc
+    public static InlineKeyboardMarkup GenotypeMenu(string language) => language switch
+    {
+        "ru" => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 тип (X⁰X⁰) & 3 тип (X⁰Y)", "genotype_1_type_3_type"),
+                InlineKeyboardButton.WithCallbackData("1 тип (X⁰X⁰) & 4 тип (XᴷY)", "genotype_1_type_4_type"),
+                
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 тип (XᴷX⁰) & 3 тип (X⁰Y)", "genotype_2_type_3_type"),
+                InlineKeyboardButton.WithCallbackData("2 тип (XᴷX⁰) & 4 тип (XᴷY)", "genotype_2_type_4_type"),
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Назад", "blood_back")
+            }
+        }),
+        "de" => new InlineKeyboardMarkup(new[]
+{
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 Typ (X⁰X⁰) & 3 Typ (X⁰Y)", "genotype_1_type_3_type"),
+                InlineKeyboardButton.WithCallbackData("1 Typ (X⁰X⁰) & 4 Typ (XᴷY)", "genotype_1_type_4_type"),
+
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 Typ (XᴷX⁰) & 3 Typ (X⁰Y)", "genotype_2_type_3_type"),
+                InlineKeyboardButton.WithCallbackData("2 Typ (XᴷX⁰) & 4 Typ (XᴷY)", "genotype_2_type_4_type"),
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Zurück", "blood_back")
+            }
+        }),
+        _ => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 Type (X⁰X⁰) & 3 Type (X⁰Y)", "genotype_1_type_3_type"),
+                InlineKeyboardButton.WithCallbackData("1 Type (X⁰X⁰) & 4 Type (XᴷY)", "genotype_1_type_4_type"),
+
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 Type (XᴷX⁰) & 3 Type (X⁰Y)", "genotype_2_type_3_type"),
+                InlineKeyboardButton.WithCallbackData("2 Type (XᴷX⁰) & 4 Type (XᴷY)", "genotype_2_type_4_type"),
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Back", "blood_back")
+            }
+        }),
+    };
 }

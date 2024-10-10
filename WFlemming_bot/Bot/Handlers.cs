@@ -152,14 +152,14 @@ public static class Handlers
             // GEN -> BLOOD
             case "gen_blood":
                 // Instraction (how to use)
-                var instruction = GetLocalizedMessage(
+                var instruction_gBlood = GetLocalizedMessage(
                     "Выберите генотип крови для расчета. Вы можете выбрать первую, вторую, третью или четвертую группу крови.",
                     "Select the blood genotype for calculation. You can choose the first, second, third, or fourth blood type.",
                     "Wählen Sie den Blutgenotyp zur Berechnung aus. Sie können den ersten, zweiten, dritten oder vierten Bluttyp wählen.",
                     language);
 
                 keyboard = InlineKeyboards.BloodCalculatorMenu(language);
-                await botClient.SendTextMessageAsync(chatId, instruction, replyMarkup: keyboard);
+                await botClient.SendTextMessageAsync(chatId, instruction_gBlood, replyMarkup: keyboard);
                 break;
 
             case "blood_first_type":
@@ -220,13 +220,31 @@ public static class Handlers
 
             //GEN -> CHROMO
             case "gen_chromosomes":
-                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
-                    "Вы выбрали Хромосомы. Начинаем расчет...",
-                    "You selected Chromosomes. Starting calculation...",
-                    "Sie haben Chromosomen gewählt. Berechnung beginnt...",
-                    language));
-                GeneticCalculator.ChromosomesFunctions.HandleChromosomes(botClient, chatId);
-                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                // Instraction (how to use)
+                var instruction_gChrom = GetLocalizedMessage(
+                    "Выберите генотип хромосом для расчета. Вы можете выбрать комбинации: 1 тип и 3 тип, 1 тип и 4 тип, 2 тип и 3 тип, 2 тип и 4 тип.",
+                    "Select the chromosome genotype for calculation. You can choose combinations: 1st type & 3rd type, 1st type & 4th type, 2nd type & 3rd type, 2nd type & 4th type.",
+                    "Wählen Sie den Chromosomen-Genotyp zur Berechnung aus. Sie können die Kombinationen wählen: 1. Typ & 3. Typ, 1. Typ & 4. Typ, 2. Typ & 3. Typ, 2. Typ & 4. Typ.",
+                    language);
+
+                keyboard = InlineKeyboards.GenotypeMenu(language);
+                await botClient.SendTextMessageAsync(chatId, instruction_gChrom, replyMarkup: keyboard);
+                break;
+
+            case "genotype_1_type_3_type":
+                GeneticCalculator.ChromosomesFunctions.HandleChromosomes(botClient, chatId, "1_type", "3_type", language);
+                break;
+
+            case "genotype_1_type_4_type":
+                GeneticCalculator.ChromosomesFunctions.HandleChromosomes(botClient, chatId, "1_type", "4_type", language);
+                break;
+
+            case "genotype_2_type_3_type":
+                GeneticCalculator.ChromosomesFunctions.HandleChromosomes(botClient, chatId, "2_type", "3_type", language);
+                break;
+
+            case "genotype_2_type_4_type":
+                GeneticCalculator.ChromosomesFunctions.HandleChromosomes(botClient, chatId, "2_type", "4_type", language);
                 break;
 
             case "gen_back":
