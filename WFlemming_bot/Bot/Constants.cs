@@ -245,4 +245,145 @@ public static class InlineKeyboards
             }
         }),
     };
+
+
+    // GEN -> POLY Calc
+    public static InlineKeyboardMarkup PolymorphismCalculatorMenu(string language) => language switch
+    {
+        "ru" => new InlineKeyboardMarkup(new[]
+        {
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Дегибридное скрещивание", "dihybrid_cross"),
+            InlineKeyboardButton.WithCallbackData("Недигибридное скрещивание", "non_dihybrid_cross"),
+        },
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Назад", "back_to_main_menu")
+        }
+    }),
+        "de" => new InlineKeyboardMarkup(new[]
+        {
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Dihybrides Kreuzen", "dihybrid_cross"),
+            InlineKeyboardButton.WithCallbackData("Nicht-dihybrides Kreuzen", "non_dihybrid_cross"),
+        },
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Zurück", "back_to_main_menu")
+        }
+    }),
+        _ => new InlineKeyboardMarkup(new[]
+        {
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Dihybrid Cross", "dihybrid_cross"),
+            InlineKeyboardButton.WithCallbackData("Non-Dihybrid Cross", "non_dihybrid_cross"),
+        },
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Back", "back_to_main_menu")
+        }
+    }),
+    };
+
+    //POLY -> EXTRA
+    public static InlineKeyboardMarkup DihybridGenotypesMenu(string language) => language switch
+    {
+        "ru" => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 тип (X⁰X⁰) & 2 тип (XᴷX⁰)", "dihybrid_1_2"),
+                InlineKeyboardButton.WithCallbackData("1 тип (X⁰X⁰) & 3 тип (X⁰Y)", "dihybrid_1_3")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 тип (XᴷX⁰) & 3 тип (X⁰Y)", "dihybrid_2_3"),
+                InlineKeyboardButton.WithCallbackData("2 тип (XᴷX⁰) & 4 тип (XᴷY)", "dihybrid_2_4")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Назад", "gen_polymorphism")
+            }
+        }),
+        "de" => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 Typ (X⁰X⁰) & 2 Typ (XᴷX⁰)", "dihybrid_1_2"),
+                InlineKeyboardButton.WithCallbackData("1 Typ (X⁰X⁰) & 3 Typ (X⁰Y)", "dihybrid_1_3")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 Typ (XᴷX⁰) & 3 Typ (X⁰Y)", "dihybrid_2_3"),
+                InlineKeyboardButton.WithCallbackData("2 Typ (XᴷX⁰) & 4 Typ (XᴷY)", "dihybrid_2_4")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Zurück", "gen_polymorphism")
+            }
+        }),
+        _ => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 Type (X⁰X⁰) & 2 Type (XᴷX⁰)", "dihybrid_1_2"),
+                InlineKeyboardButton.WithCallbackData("1 Type (X⁰X⁰) & 3 Type (X⁰Y)", "dihybrid_1_3")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 Type (XᴷX⁰) & 3 Type (X⁰Y)", "dihybrid_2_3"),
+                InlineKeyboardButton.WithCallbackData("2 Type (XᴷX⁰) & 4 Type (XᴷY)", "dihybrid_2_4")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Back", "gen_polymorphism")
+            }
+        }),
+    };
+
+    public static InlineKeyboardMarkup NonDihybridGenotypesMenu(string language) => language switch
+    {
+        "ru" => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 тип (X⁰X⁰) & 1 тип (X⁰X⁰)", "non_dihybrid_1_1"),
+                InlineKeyboardButton.WithCallbackData("1 тип (X⁰X⁰) & 2 тип (XᴷX⁰)", "non_dihybrid_1_2")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 тип (XᴷX⁰) & 2 тип (XᴷX⁰)", "non_dihybrid_2_2"),
+                InlineKeyboardButton.WithCallbackData("Назад", "gen_polymorphism")
+            }
+        }),
+        "de" => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 Typ (X⁰X⁰) & 1 Typ (X⁰X⁰)", "non_dihybrid_1_1"),
+                InlineKeyboardButton.WithCallbackData("1 Typ (X⁰X⁰) & 2 Typ (XᴷX⁰)", "non_dihybrid_1_2")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 Typ (XᴷX⁰) & 2 Typ (XᴷX⁰)", "non_dihybrid_2_2"),
+                InlineKeyboardButton.WithCallbackData("Zurück", "gen_polymorphism")
+            }
+        }),
+        _ => new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1 Type (X⁰X⁰) & 1 Type (X⁰X⁰)", "non_dihybrid_1_1"),
+                InlineKeyboardButton.WithCallbackData("1 Type (X⁰X⁰) & 2 Type (XᴷX⁰)", "non_dihybrid_1_2")
+            },
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("2 Type (XᴷX⁰) & 2 Type (XᴷX⁰)", "non_dihybrid_2_2"),
+                InlineKeyboardButton.WithCallbackData("Back", "gen_polymorphism")
+            }
+        }),
+    };
 }

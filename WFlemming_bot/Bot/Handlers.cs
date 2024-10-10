@@ -195,17 +195,72 @@ public static class Handlers
                     language);
                 await botClient.SendTextMessageAsync(chatId, backMessage, replyMarkup: keyboard);
                 break;
-            
+
             //GEN -> POLYM
             case "gen_polymorphism":
-                await botClient.SendTextMessageAsync(chatId, GetLocalizedMessage(
-                    "Вы выбрали Полиморфизм. Начинаем расчет...",
-                    "You selected Polymorphism. Starting calculation...",
-                    "Sie haben Polymorphismus gewählt. Berechnung beginnt...",
-                    language));
-                GeneticCalculator.PolymorphismFunctions.HandlePolymorphism(botClient, chatId);
-                await SendGeneticCalculatorMenu(botClient, chatId, language);
+                // Instruction (how to use)
+                var instruction_chromosomes = GetLocalizedMessage(
+                    "Выберите генотипы для расчета хромосом. Вы можете выбрать дигибридное или недигибридное скрещивание.",
+                    "Select genotypes for chromosome calculation. You can choose dihybrid or non-dihybrid crossing.",
+                    "Wählen Sie Genotypen für die Berechnung der Chromosomen aus. Sie können dihybrides oder nicht-di-hybridisches Kreuzen wählen.",
+                    language);
+
+                var polymorphismKeyboard = InlineKeyboards.PolymorphismCalculatorMenu(language);
+                await botClient.SendTextMessageAsync(chatId, instruction_chromosomes, replyMarkup: polymorphismKeyboard);
                 break;
+
+            case "dihybrid_cross":
+                // Instruction (how to use)
+                var instruction_dihybrid = GetLocalizedMessage(
+                    "Выберите генотипы для дигибридного скрещивания:",
+                    "Select genotypes for dihybrid crossing:",
+                    "Wählen Sie Genotypen für die dihybride Kreuzung:",
+                    language);
+
+                var dihybridKeyboard = InlineKeyboards.DihybridGenotypesMenu(language);
+                await botClient.SendTextMessageAsync(chatId, instruction_dihybrid, replyMarkup: dihybridKeyboard);
+                break;
+
+            case "non_dihybrid_cross":
+                // Instruction (how to use)
+                var instruction_non_dihybrid = GetLocalizedMessage(
+                    "Выберите генотипы для недигибридного скрещивания:",
+                    "Select genotypes for non-dihybrid crossing:",
+                    "Wählen Sie Genotypen für die nicht-di-hybridische Kreuzung:",
+                    language);
+
+                var nonDihybridKeyboard = InlineKeyboards.NonDihybridGenotypesMenu(language);
+                await botClient.SendTextMessageAsync(chatId, instruction_non_dihybrid, replyMarkup: nonDihybridKeyboard);
+                break;
+
+            case "dihybrid_1_2":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "first_type", "second_type", "digipoln", language);
+                break;
+
+            case "dihybrid_1_3":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "first_type", "third_type", "digipoln", language);
+                break;
+
+            case "dihybrid_2_3":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "second_type", "third_type", "digipoln", language);
+                break;
+
+            case "dihybrid_2_4":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "second_type", "fourth_type", "digipoln", language);
+                break;
+
+            case "non_dihybrid_1_1":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "first_type", "first_type", "diginepoln", language);
+                break;
+
+            case "non_dihybrid_1_2":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "first_type", "second_type", "diginepoln", language);
+                break;
+
+            case "non_dihybrid_2_2":
+                await GeneticCalculatorFunctions.HandleChromosomeCalculation(botClient, chatId, "second_type", "second_type", "diginepoln", language);
+                break;
+
 
             //GEN -> COMPL
             case "gen_complementarity":
@@ -299,4 +354,32 @@ public static class Handlers
         Console.WriteLine($"Error: {exception.Message}");
         return Task.CompletedTask;
     }
+
+
+    //// GEN -> POLY ExtraFun
+    //private async Task ShowDihybridGenotypesMenu(ITelegramBotClient botClient, long chatId, string language)
+    //{
+    //    // Instraction (how to use)
+    //    var instruction = GetLocalizedMessage(
+    //        "Выберите генотипы для дигибридного скрещивания:",
+    //        "Select genotypes for dihybrid crossing:",
+    //        "Wählen Sie Genotypen für die dihybride Kreuzung:",
+    //        language);
+
+    //    var keyboard = InlineKeyboards.DihybridGenotypesMenu(language);
+    //    await botClient.SendTextMessageAsync(chatId, instruction, replyMarkup: keyboard);
+    //}
+
+    //private async Task ShowNonDihybridGenotypesMenu(ITelegramBotClient botClient, long chatId, string language)
+    //{
+    //    // Instraction (how to use)
+    //    var instruction = GetLocalizedMessage(
+    //        "Выберите генотипы для недигибридного скрещивания:",
+    //        "Select genotypes for non-dihybrid crossing:",
+    //        "Wählen Sie Genotypen für die nicht-di-hybridische Kreuzung:",
+    //        language);
+
+    //    var keyboard = InlineKeyboards.NonDihybridGenotypesMenu(language);
+    //    await botClient.SendTextMessageAsync(chatId, instruction, replyMarkup: keyboard);
+    //}
 }
